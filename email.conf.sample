@@ -1,0 +1,6 @@
+[email]
+fromAddress = my_email@gmail.com
+toAddress = my_email@gmail.com
+login = my_email@gmail.com
+password = my_google_password
+smtpserver = smtp.gmail.com:587
