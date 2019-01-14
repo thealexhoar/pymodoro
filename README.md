@@ -13,7 +13,7 @@ To use, run `$ main.py`  with the following command line arguments:
 
 
 |Argument|Description|
-|--|--|--|
+|--|--|
 |`--email-conf=`, `-e`|Sets location of email configuration file. If this option is used, SMTP mail notifications will be enabled. See `email.conf.sample`.|
 |`--pattern=`, `-p`|Defines pattern of work/break periods. Defaults to alternating between four 25min work periods and four 5min break periods. Read the **Patterns** section for more detail.|
 |`--no-notification`, `-n`|Disables desktop notifications|
