@@ -78,18 +78,19 @@ def clean_pattern(pattern):
     return output
 
 def main():
+
     args = sys.argv[1:]
-    options = 'ne:p:' # empty string to only accept long options
+    options = 'ne:p:' # empty string would only accept long options
     long_options = [
-        'no-email',
         'email-conf=',
-        'pattern='
+        'pattern=',
+        'no-notifcation'
     ]
 
     config_vals = {
-        'conf_path': 'email.conf',
-        'pattern': None,
-        'no-email': False
+        'email_conf': None,
+        'pattern': 'w25b5w25b5w25b5',
+        'no-notification': False
     }
 
     try:
@@ -101,10 +102,10 @@ def main():
 
     #print(opt_vals)
     for opt, arg in opt_vals:
-        if opt == '--no-email' or opt == '-n':
-            config_vals['no-email'] = True
+        if opt == '--no-notifcation' or opt == '-n':
+            config_vals['no-notification'] = True
         if opt == '--email-conf' or opt == '-e':
-            config_vals['conf_path'] = arg
+            config_vals['email_conf'] = arg
         if opt == '--pattern' or opt == '-p':
             config_vals['pattern'] = arg
 
@@ -120,17 +121,18 @@ def main():
         print(str(err))
         sys.exit()
 
-    conf_parser = configparser.ConfigParser()
+    if config_vals['email_conf'] is not None: 
+        conf_parser = configparser.ConfigParser()
 
-    conf_path = r'email.conf'
-    conf_parser.read(conf_path)
+        conf_path = r'email.conf'
+        conf_parser.read(conf_path)
 
-    from_address = conf_parser.get('email', 'fromAddress')
-    to_address = conf_parser.get('email', 'toAddress')
-    login = conf_parser.get('email', 'login')
-    password = conf_parser.get('email', 'password')
-    server = conf_parser.get('email', 'smtpserver')
-    subject = 'Pymodoro Alert!'
+        from_address = conf_parser.get('email', 'fromAddress')
+        to_address = conf_parser.get('email', 'toAddress')
+        login = conf_parser.get('email', 'login')
+        password = conf_parser.get('email', 'password')
+        server = conf_parser.get('email', 'smtpserver')
+        subject = 'Pymodoro Alert!'
 
     for task, duration in cleaned_pattern:
         task_string = ''
@@ -148,15 +150,22 @@ def main():
         wait(duration)
         time_str = datetime.now().strftime('%H:%M')
         print('[{}] Completed {}!'.format(time_str, task_string))
-        alert.sendemail(
-            from_addr = from_address,
-            to_addr_list = [to_address],
-            subject = subject,
-            message = 'Your {} is complete!'.format(task_string),
-            login = login,
-            password = password,
-            smtpserver = server
-        )
+
+        notification_string = 'Your {} is complete!'.format(task_string)
+
+        if not config_vals['no-notification']:
+            alert.notify_desktop('Pymodoro', notification_string)
+
+        if config_vals['email_conf'] is not None: 
+            alert.send_email(
+                from_addr = from_address,
+                to_addr_list = [to_address],
+                subject = subject,
+                message = notification_string,
+                login = login,
+                password = password,
+                smtpserver = server
+            )
 
 
 

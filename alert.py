@@ -1,7 +1,11 @@
 import smtplib
 import email.message 
+import subprocess as s
+import os
 
-def sendemail(
+def is_windows
+
+def send_email(
     from_addr, 
     to_addr_list, 
     subject, 
@@ -22,19 +26,10 @@ def sendemail(
 
     server.quit()
 
-def notify():
-    #TODO: Implement
-    print("TODO")
-
-
-if __name__ == '__main__':
-    sendemail(
-        from_addr = 'thealexhoar@gmail.com',
-        to_addr_list = ['thealexhoar@gmail.com'],
-        cc_addr_list = [],
-        subject = 'Test',
-        message = 'Hello email world!',
-        login = 'thealexhoar@gmail.com',
-        password = 'kolpamgbbdwouzsh'
-    )
+def notify_desktop(title, text):
+    if is_windows():
+        # TODO: implement desktop notifications on windows
+        pass
+    else:
+        s.call(['notify-send',title,text])
 
